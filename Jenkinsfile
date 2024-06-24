@@ -11,23 +11,16 @@ pipeline {
     }
    
     stages {
-        stage('Checkout') {
-            steps {        
-                // Checkout code from the branch that triggered the build
-                script {
-                    git url: 'https://github.com/hoanglecao/kubernetes.git', branch: "develop"
-                }
-            }
-            
-        }
-
+       
         stage('Login to Azure') {
             steps {
+                
                 withCredentials([usernamePassword(credentialsId: "${env.AZURE_CREDENTIALS_ID}", usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET')]) {
-                    sh '''
+                    sh """
+                        echo 'value' $AZURE_CLIENT_ID
                         az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $TENANT_ID
                         az acr login --name $ACR_NAME
-                    '''
+                    """
                 }
             }
         }
