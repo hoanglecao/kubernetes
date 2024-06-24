@@ -6,13 +6,16 @@ pipeline {
         ACR_NAME = "practicaldevops"
         ACR_LOGIN_SERVER = "practicaldevops.azurecr.io"
         ACR_CREDENTIALS_ID = "f9592263-0b9f-441b-b931-02108c3fa9e9"
+        BRANCH_NAME = "${params.BRANCH_NAME}"
     }
-
+     parameters {
+        string(name: 'BRANCH_NAME', defaultValue: 'develop', description: 'Branch to build')
+    }
     stages {
         stage('Print Branch Name') {
             steps {
                 script {
-                    echo "Building branch: ${env.BRANCH_NAME}"
+                    echo "Building branch: ${BRANCH_NAME}"
                 }
             }
         }
@@ -20,7 +23,7 @@ pipeline {
             steps {        
                 // Checkout code from the branch that triggered the build
                 script {
-                    git url: 'https://github.com/hoanglecao/kubernetes.git', branch: "${env.BRANCH_NAME}"
+                    git url: 'https://github.com/hoanglecao/kubernetes.git', branch: "${BRANCH_NAME}"
                 }
             }
             
