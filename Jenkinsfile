@@ -44,7 +44,7 @@ pipeline {
        stage('Push Docker Image to ACR') {
             steps {
                 sh '''
-                    docker push $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG
+                    docker push $ACR_LOGIN_SERVER/$DOCKER_IMAGE
                 '''
             }
         }
