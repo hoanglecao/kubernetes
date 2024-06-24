@@ -39,10 +39,12 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
+                    echo 'Start pushing Docker Image to ACR!'
                     dir("${WORKDIR}") {
                         docker.withRegistry("https://$ACR_LOGIN_SERVER", "$ACR_CREDENTIALS_ID") {
                         sh "docker push $ACR_LOGIN_SERVER/$DOCKER_IMAGE"
                     }
+                    echo 'Push Docker Image to ACR succeeded!'
                 }
                     }
                     
@@ -52,11 +54,13 @@ pipeline {
         stage('Deploy to AKS') {
             steps {
                 script {
+                    echo 'Start deploying image to AKS!'
                      dir("${WORKDIR}") {
                     sh """
                         kubectl apply -f frontent.yaml --namespace=devops                        
                     """
                      }
+                     echo 'Deploy image to AKS succeeded!'
                 }
             }
         }
