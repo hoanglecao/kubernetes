@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = "react-app"
         ACR_NAME = "practicaldevops"
         ACR_LOGIN_SERVER = "practicaldevops.azurecr.io"
-        ACR_CREDENTIALS_ID = "f9592263-0b9f-441b-b931-02108c3fa9e9"
+        ACR_CREDENTIALS_ID = "f9592263-0b9f-441b-b931-02108c3fa9e9" 
         WORKDIR = 'src/frontend'
 
     }
@@ -39,16 +39,14 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    echo 'Start pushing Docker Image to ACR!'
-                    dir("${WORKDIR}") {
-                        docker.withRegistry("https://$ACR_LOGIN_SERVER", "$ACR_CREDENTIALS_ID") {
+                     docker.withRegistry("https://$ACR_LOGIN_SERVER", "$ACR_CREDENTIALS_ID")
+                      {
                         sh "docker push $ACR_LOGIN_SERVER/$DOCKER_IMAGE"
                     }
-                    echo 'Push Docker Image to ACR succeeded!'
                 }
-                    }
                     
-            }
+            
+        }
         }
 
         stage('Deploy to AKS') {
