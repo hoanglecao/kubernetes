@@ -21,13 +21,23 @@ pipeline {
             
         }
 
+        stage('Login to Azure') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: "${env.AZURE_CREDENTIALS_ID}", usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET')]) {
+                    sh '''
+                        az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $TENANT_ID
+                        az acr login --name $ACR_NAME
+                    '''
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
                     dir("${WORKDIR}") {
                         sh """
-                        docker build -t $DOCKER_IMAGE .
-                        docker tag $DOCKER_IMAGE $ACR_LOGIN_SERVER/$DOCKER_IMAGE
+                        docker build -t $DOCKER_IMAGE $ACR_LOGIN_SERVER/$DOCKER_IMAGE
                         """
 
                     }
@@ -39,14 +49,14 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                     docker.withRegistry("https://$ACR_LOGIN_SERVER", "$ACR_CREDENTIALS_ID")
-                      {
-                        sh "docker push $ACR_LOGIN_SERVER/$DOCKER_IMAGE"
-                    }
+                    withCredentials([usernamePassword(credentialsId: "${env.ACR_CREDENTIALS_ID}", passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                    sh """
+                        echo $PASSWORD | docker login $ACR_LOGIN_SERVER -u $USERNAME --password-stdin
+                        docker push $ACR_LOGIN_SERVER/$DOCKER_IMAGE
+                    """
                 }
-                    
-            
-        }
+                }
+            }
         }
 
         stage('Deploy to AKS') {
