@@ -9,11 +9,21 @@ pipeline {
     }
 
     stages {
+        stage('Print Branch Name') {
+            steps {
+                script {
+                    echo "Building branch: ${env.BRANCH_NAME}"
+                }
+            }
+        }
         stage('Checkout') {
             steps {        
-                echo  "${env.BRANCH_NAME}"
-                git url: 'https://github.com/hoanglecao/kubernetes.git', branch: "${env.BRANCH_NAME}"
+                // Checkout code from the branch that triggered the build
+                script {
+                    git url: 'https://github.com/hoanglecao/kubernetes.git', branch: "${env.BRANCH_NAME}"
+                }
             }
+            
         }
 
         stage('Build Application') {
