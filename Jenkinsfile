@@ -12,7 +12,10 @@ pipeline {
         
         stage('Checkout') {
             steps {        
-               checkout scm
+                // Checkout code from the branch that triggered the build
+                script {
+                    git url: 'https://github.com/hoanglecao/kubernetes.git', branch: "develop"
+                }
             }
             
         }
