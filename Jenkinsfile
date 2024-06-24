@@ -14,10 +14,11 @@ pipeline {
        
         stage('Login to Azure') {
             steps {
-                
+                 echo "${env.AZURE_CREDENTIALS_ID}"
+                 echo "tst"
+                echo  "${AZURE_CREDENTIALS_ID}"
                 withCredentials([usernamePassword(credentialsId: "${env.AZURE_CREDENTIALS_ID}", usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET')]) {
                     sh """
-                        echo 'value' $AZURE_CLIENT_ID
                         az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $TENANT_ID
                         az acr login --name $ACR_NAME
                     """
