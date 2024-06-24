@@ -52,9 +52,11 @@ pipeline {
         stage('Deploy to AKS') {
             steps {
                 script {
+                     dir("${WORKDIR}") {
                     sh """
                         kubectl apply -f frontent.yaml --namespace=devops                        
                     """
+                     }
                 }
             }
         }
