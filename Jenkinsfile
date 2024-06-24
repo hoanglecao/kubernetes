@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = "react-app"
         ACR_NAME = "practicaldevops"
         ACR_LOGIN_SERVER = "practicaldevops.azurecr.io"
-        ACR_CREDENTIALS_ID = "f9592263-0b9f-441b-b931-02108c3fa9e9" 
+        ACR_CREDENTIALS_ID = "azure-sp-credentials" 
         WORKDIR = 'src/frontend'
 
     }
