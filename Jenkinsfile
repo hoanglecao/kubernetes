@@ -32,7 +32,7 @@ pipeline {
                 script {
                     dir("${WORKDIR}") {
                         sh """
-                        docker build -t $ACR_LOGIN_SERVER/$DOCKER_IMAGE
+                        docker build -t $ACR_LOGIN_SERVER/$DOCKER_IMAGE .
                         """
 
                     }
