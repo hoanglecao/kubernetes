@@ -7,6 +7,7 @@ pipeline {
         ACR_LOGIN_SERVER = "practicaldevops.azurecr.io"
         ACR_CREDENTIALS_ID = "azure-sp-credentials" 
         WORKDIR = 'src/frontend'
+        TENANT_ID = "ccbbcd23-7475-465d-923e-d6fdd342f209"
 
     }
    
@@ -17,6 +18,7 @@ pipeline {
                echo "AZURE_CREDENTIALS_ID: ${env.ACR_CREDENTIALS_ID}"
                 withCredentials([usernamePassword(credentialsId: "${env.ACR_CREDENTIALS_ID}", usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET')]) {
                     sh """
+                        echo "AZURE_CLIENT_ID" : $AZURE_CLIENT_ID
                         az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $TENANT_ID
                         az acr login --name $ACR_NAME
                     """
