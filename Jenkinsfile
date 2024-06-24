@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {        
-                echo ${env.BRANCH_NAME} 
+                echo  "${env.BRANCH_NAME}"
                 git url: 'https://github.com/hoanglecao/kubernetes.git', branch: "${env.BRANCH_NAME}"
             }
         }
