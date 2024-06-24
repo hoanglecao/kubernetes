@@ -15,12 +15,13 @@ pipeline {
        
         stage('Login to Azure') {
             steps {
-               echo "AZURE_CREDENTIALS_ID: ${env.ACR_CREDENTIALS_ID}"
+        
                 withCredentials([usernamePassword(credentialsId: "${env.ACR_CREDENTIALS_ID}", usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET')]) {
-                    sh """
-                        echo "AZURE_CLIENT_ID" : $AZURE_CLIENT_ID
+                    sh """                    
+                       echo "Logging in to Azure..."
                         az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $TENANT_ID
-                        az acr login --name $ACR_NAME
+                        echo "Logging in to ACR..."
+                        az acr login --name $ACR_NAME || exit 1
                     """
                 }
             }
@@ -40,16 +41,11 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image') {
+       stage('Push Docker Image to ACR') {
             steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: "${env.ACR_CREDENTIALS_ID}", passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-                    sh """
-                        echo $PASSWORD | docker login $ACR_LOGIN_SERVER -u $USERNAME --password-stdin
-                        docker push $ACR_LOGIN_SERVER/$DOCKER_IMAGE
-                    """
-                }
-                }
+                sh '''
+                    docker push $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG
+                '''
             }
         }
 
