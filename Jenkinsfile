@@ -6,10 +6,18 @@ pipeline {
         ACR_NAME = "practicaldevops"
         ACR_LOGIN_SERVER = "practicaldevops.azurecr.io"
         ACR_CREDENTIALS_ID = "f9592263-0b9f-441b-b931-02108c3fa9e9"
+        GIT_EXECUTABLE = '/usr/bin/git'
     }
    
     stages {
-        
+        stage('Verify Git') {
+            steps {
+                script {
+                    // Verify the Git executable path
+                    sh "${GIT_EXECUTABLE} --version"
+                }
+            }
+        }
         stage('Checkout') {
             steps {        
                 // Checkout code from the branch that triggered the build
