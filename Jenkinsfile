@@ -6,6 +6,7 @@ pipeline {
         ACR_NAME = "practicaldevops"
         ACR_LOGIN_SERVER = "practicaldevops.azurecr.io"
         ACR_CREDENTIALS_ID = "f9592263-0b9f-441b-b931-02108c3fa9e9"
+        WORKDIR = 'src/frontend'
 
     }
    
@@ -23,8 +24,11 @@ pipeline {
         stage('Build Application') {
             steps {
                 script {
-                    sh 'npm install'
-                    sh 'npm run build'
+                    dir("${WORKDIR}") {
+                        sh 'npm install'
+                        sh 'npm run build'
+                    }
+                    
                 }
             }
         }
@@ -32,10 +36,14 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh """
+                    dir("${WORKDIR}") {
+                        sh """
                         docker build -t $DOCKER_IMAGE .
                         docker tag $DOCKER_IMAGE $ACR_LOGIN_SERVER/$DOCKER_IMAGE
-                    """
+                        """
+
+                    }
+                    
                 }
             }
         }
@@ -43,10 +51,13 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry("https://$ACR_LOGIN_SERVER", "$ACR_CREDENTIALS_ID") {
+                    dir("${WORKDIR}") {
+                        docker.withRegistry("https://$ACR_LOGIN_SERVER", "$ACR_CREDENTIALS_ID") {
                         sh "docker push $ACR_LOGIN_SERVER/$DOCKER_IMAGE"
                     }
                 }
+                    }
+                    
             }
         }
 
