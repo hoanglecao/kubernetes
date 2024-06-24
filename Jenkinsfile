@@ -21,18 +21,6 @@ pipeline {
             
         }
 
-        stage('Build Application') {
-            steps {
-                script {
-                    dir("${WORKDIR}") {
-                        sh 'npm install'
-                        sh 'npm run build'
-                    }
-                    
-                }
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 script {
