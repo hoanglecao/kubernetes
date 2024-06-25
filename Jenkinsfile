@@ -21,7 +21,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: "${env.ACR_CREDENTIALS_ID}", usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET')]) {
                     sh """                    
                        echo "Logging in to Azure..." : $AZURE_CLIENT_ID "dn" $AZURE_CLIENT_SECRET "s" $TENANT_ID
-                        az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $TENANT_ID
+                        az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $TENANT_ID --allow-no-subscriptions
                         az account set -s $AZURE_SUBSCRIPTION_ID
                         echo "Logging in to ACR..."
                         az acr login --name $ACR_NAME  || exit 1
