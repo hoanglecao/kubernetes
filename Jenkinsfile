@@ -58,6 +58,7 @@ pipeline {
                     echo 'Start deploying image to AKS!'
                      dir("${WORKDIR}") {
                     sh """
+                        wsl kubectl version --client
                         kubectl apply -f frontent.yaml --namespace=devops                        
                     """
                      }
