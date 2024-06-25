@@ -24,13 +24,13 @@ pipeline {
                         az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $TENANT_ID --allow-no-subscriptions
                         az account set -s $AZURE_SUBSCRIPTION_ID
                         echo "Logging in to ACR..."
-                        az acr login --name $ACR_NAME  || exit 1
+                        # az acr login --name $ACR_NAME  || exit 1
                     """
                 }
             }
         }
 
-       stage('Build Docker Image') {
+     /*  stage('Build Docker Image') {
             steps {
                 script {
                     dir("${WORKDIR}") {
@@ -50,7 +50,7 @@ pipeline {
                     docker push $ACR_LOGIN_SERVER/$DOCKER_IMAGE
                 '''
             }
-        }  
+        }  */
 
         stage('Deploy to AKS') {
             steps {
