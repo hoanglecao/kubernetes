@@ -8,7 +8,8 @@ pipeline {
         ACR_CREDENTIALS_ID = "azure-sp-credentials" 
         WORKDIR = 'src/frontend'
         TENANT_ID = "ccbbcd23-7475-465d-923e-d6fdd342f209"
-        RESOURCE_GROUP = "aks-demo"
+        AZURE_SUBSCRIPTION_ID = "df7f2321-fcf2-42cb-a756-12033750249e"
+       
 
     }
    
@@ -21,8 +22,9 @@ pipeline {
                     sh """                    
                        echo "Logging in to Azure..." : $AZURE_CLIENT_ID "dn" $AZURE_CLIENT_SECRET "s" $TENANT_ID
                         az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $TENANT_ID
+                        az account set -s $AZURE_SUBSCRIPTION_ID
                         echo "Logging in to ACR..."
-                        az acr login --name $ACR_NAME  --resource-group $RESOURCE_GROUP || exit 1
+                        az acr login --name $ACR_NAME  || exit 1
                     """
                 }
             }
