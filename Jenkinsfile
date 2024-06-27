@@ -8,8 +8,7 @@ pipeline {
         ACR_CREDENTIALS_ID = "azure-sp-credentials" 
         WORKDIR = 'src/frontend'
         TENANT_ID = "ccbbcd23-7475-465d-923e-d6fdd342f209"
-        AZURE_SUBSCRIPTION_ID = "df7f2321-fcf2-42cb-a756-12033750249e"
-       
+        
 
     }
    
@@ -21,8 +20,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: "${env.ACR_CREDENTIALS_ID}", usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET')]) {
                     sh """                    
                        echo "Logging in to Azure..." : $AZURE_CLIENT_ID "dn" $AZURE_CLIENT_SECRET "s" $TENANT_ID
-                        az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $TENANT_ID --allow-no-subscriptions
-                        az account set -s $AZURE_SUBSCRIPTION_ID
+                        az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $TENANT_ID 
                         echo "Logging in to ACR..."
                         # az acr login --name $ACR_NAME  || exit 1
                     """
@@ -30,7 +28,7 @@ pipeline {
             }
         }
 
-     /*  stage('Build Docker Image') {
+       stage('Build Docker Image') {
             steps {
                 script {
                     dir("${WORKDIR}") {
@@ -50,15 +48,14 @@ pipeline {
                     docker push $ACR_LOGIN_SERVER/$DOCKER_IMAGE
                 '''
             }
-        }  */
+        }  
 
         stage('Deploy to AKS') {
             steps {
                 script {
                     echo 'Start deploying image to AKS!'
                      dir("${WORKDIR}") {
-                    sh """
-                        wsl kubectl version --client
+                    sh """                      
                         kubectl apply -f frontent.yaml --namespace=devops                        
                     """
                      }
